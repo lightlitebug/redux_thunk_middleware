@@ -24,7 +24,7 @@ class ProductPage extends StatelessWidget {
       body: StoreConnector<AppState, _ViewModel>(
         distinct: true,
         onInit: (Store<AppState> store) {
-          store.dispatch(GetProductAction(id: productId));
+          store.dispatch(getProductAndDispatch(productId));
         },
         onWillChange: (_ViewModel? prev, _ViewModel current) {
           if (current.status == ProductStatus.failure) {

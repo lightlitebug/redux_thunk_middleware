@@ -1,4 +1,9 @@
+import 'package:redux/redux.dart';
+import 'package:redux_thunk/redux_thunk.dart';
+
 import '../../models/product.dart';
+import '../../repositories/product_repository.dart';
+import '../app_state.dart';
 
 class GetProductsAction {
   @override
@@ -23,4 +28,18 @@ class GetProductsFailedAction {
 
   @override
   String toString() => 'GetProductsFailedAction(error: $error)';
+}
+
+ThunkAction<AppState> getProductsAndDispatch() {
+  return (Store<AppState> store) async {
+    store.dispatch(GetProductsAction());
+
+    try {
+      final List<Product> products =
+          await ProductRepository.instance.getProducts();
+      store.dispatch(GetProductsSucceededAction(products: products));
+    } catch (e) {
+      store.dispatch(GetProductsFailedAction(error: e.toString()));
+    }
+  };
 }
